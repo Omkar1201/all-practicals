@@ -1,0 +1,44 @@
+import java.util.Arrays;
+
+public class FractionalKnapsack {
+
+    public static double getMaxValue(int[][] items, int capacity) {
+        // Sort items by ratio (value/weight) in descending order
+        Arrays.sort(items, (a, b) -> Double.compare(b[0], a[0]));
+
+        double totalValue = 0.0;
+
+        for (int[] item : items) {
+            int weight = item[1];
+            int value = item[2];
+            
+            if (capacity >= weight) {
+             
+                capacity -= weight;
+                totalValue += value;
+            } else {
+               
+                totalValue += value * ((double) capacity / weight);
+                break;
+            }
+        }
+        return totalValue;
+    }
+
+    public static void main(String[] args) {
+        int[][] items = {
+            {0, 10, 60},  // ratio = 0 (to be calculated)
+            {0, 20, 100}, 
+            {0, 30, 120}  
+        };
+        int capacity = 50;
+
+        // Calculate the ratio as value/weight for each item
+        for (int[] item : items) {
+            item[0] = item[2] / item[1];
+        }
+
+        double maxValue = getMaxValue(items, capacity);
+        System.out.println("Maximum value we can obtain = " + maxValue);
+    }
+}

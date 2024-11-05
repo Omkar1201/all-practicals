@@ -1,0 +1,86 @@
+public class Knapsack01 {
+
+    public static int knapsack(int[] weights, int[] values, int capacity) {
+        int n = weights.length;
+        int[][] dp = new int[n + 1][capacity + 1];
+
+        // Build the dp table in a bottom-up manner
+        for (int i = 1; i <= n; i++) {
+            for (int w = 0; w <= capacity; w++) {
+                if (weights[i - 1] <= w) {
+                    // Include the item
+                    dp[i][w] = Math.max(dp[i - 1][w], values[i - 1] + dp[i - 1][w - weights[i - 1]]);
+                } else {
+                    // Exclude the item
+                    dp[i][w] = dp[i - 1][w];
+                }
+            }
+        }
+        return dp[n][capacity];
+    }
+
+    public static void main(String[] args) {
+        int[] weights = {10, 20, 30};
+        int[] values = {60, 100, 120};
+        int capacity = 50;
+
+        int maxValue = knapsack(weights, values, capacity);
+        System.out.println("Maximum value we can obtain = " + maxValue);
+    }
+}
+
+
+
+
+
+/*
+In the 0/1 Knapsack problem, you have:
+
+Items, each with a specific weight and value.
+A knapsack with a maximum weight capacity.
+The goal is to maximize the total value of items in the knapsack, without exceeding the capacity. You can either include or exclude each item fully.
+
+Example Data
+Let’s take this example:
+
+Weights: {10, 20, 30}
+Values: {60, 100, 120}
+Capacity: 50
+Dynamic Programming Table (DP Table)
+We create a 2D DP table dp[i][w], where:
+
+i is the item number (up to the total number of items).
+w is the current capacity (up to the max capacity, 50 in this case).
+dp[i][w] stores the maximum value we can get using the first i items and a knapsack capacity of w.
+
+Steps to Fill the Table
+For each item i and each possible capacity w, we have two choices:
+
+Exclude the item: The best value we can get remains the same as without this item (dp[i-1][w]).
+Include the item (if the item’s weight is <= current capacity w):
+The value becomes value of item + best value for the remaining capacity, which is values[i-1] + dp[i-1][w - weights[i-1]].
+We then take the maximum of these two choices for dp[i][w].
+
+Filling the Table with Example
+Let’s fill part of the table for our example:
+
+For Item 1 (weight 10, value 60):
+
+For capacities 0 to 9, we can’t include the item, so dp[1][w] = 0.
+For capacities 10 and above, we can either:
+Exclude it (dp[1][w] = dp[0][w] = 0).
+Include it (dp[1][w] = 60 because value = 60).
+So for capacities 10 to 50, dp[1][w] = 60.
+For Item 2 (weight 20, value 100):
+
+For capacities 0 to 19, we can’t include the item, so dp[2][w] = dp[1][w].
+For capacities 20 to 50, we have two options:
+Exclude it: dp[2][w] = 60.
+Include it: dp[2][w] = 100.
+The table now has dp[2][w] = 160 for capacities 30 and above (adding value of 100 + 60 from previous).
+For Item 3 (weight 30, value 120):
+
+Now we compare options for capacities up to 50 and choose the best value.
+Final Answer
+The maximum value at dp[3][50] (last row, last column) is 220, meaning that we can achieve a maximum value of 220 without exceeding a capacity of 50
+*/
